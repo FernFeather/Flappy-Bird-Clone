@@ -1,32 +1,31 @@
 let player, floor, obstacles, loss;
 
 function setup() {
-  createCanvas(400, 600);
+  createCanvas(windowWidth, windowHeight); // Adjust canvas size to fit the whole window
   world.autoStep = false;
 
-  //Create floor object
-  floor = new Sprite(150, 580, 800, 40, "n");
+  // Create floor object
+  floor = new Sprite(width / 2, height - 20, width * 2, 40, "n"); // Adjust floor position and width
 
-  //Create player object
-  player = new Sprite(0, height / 2);
+  // Create player object
+  player = new Sprite(width / 4, height / 2); // Adjust player initial position
 
-  //Create game obstacles group
+  // Create game obstacles group
   obstacles = new Group();
-  obstacles.h = 400;
+  obstacles.h = 600;
   obstacles.w = 80;
   obstacles.color = "orange";
   obstacles.collider = "s";
 
-  //Set the camera location
-  camera.x = 150;
+  // Set the camera location
+  camera.x = width / 2; // Adjust camera position
   loss = true;
   restartPossible = true;
 }
 
 function draw() {
-
-  //Starts the game with a mouse pressed or space bar
-  if (mouse.presses() || kb.presses("space")) {
+  // Starts the game with a mouse pressed or space bar
+  if (mouseIsPressed || keyIsDown(32)) {
     player.vel.y = -9;
 
     if (restartPossible) {
@@ -34,63 +33,63 @@ function draw() {
     }
   }
 
-  //If the game isn't over run the code
+  // If the game isn't over run the code
   if (!loss) {
-    //Rotate player
+    // Rotate player
     player.rotation = player.direction * 0.8;
 
-    //Prevent player from going above top of screen
+    // Prevent player from going above top of screen
     if (player.y < 0) {
       player.y = 0;
     }
 
     // if the player hits the floor or pipe, it dies
-    if (player.y > 540 || player.collides(obstacles)) {
+    if (player.y > height - 20 || player.collides(obstacles)) { // Adjust floor collision check
       die();
     }
 
-    //Create new obstacles every 60 frames (1 second)
+    // Create new obstacles every 60 frames (1 second)
     if (frameCount % 60 == 0) {
       let pos = random(0, 150);
 
-      //Create a bottom pipe
+      // Create a bottom pipe
       let bottomPipe = new obstacles.Sprite();
       bottomPipe.x = width + player.x;
       bottomPipe.y = floor.y - pos;
 
-      //Create a top pipe
+      // Create a top pipe
       let topPipe = new obstacles.Sprite();
       topPipe.x = bottomPipe.x;
-      topPipe.y = floor.y - pos - 510 - random(0, 80);
+      topPipe.y = floor.y - pos - 810 - random(0, 80);
       topPipe.mirror.y = -1;
     }
 
-    //Get rid of obstacles when they reach the left side of screen
+    // Get rid of obstacles when they reach the left side of screen
     for (let pipe of obstacles) {
       if (pipe.x < player.x - width / 2) {
         pipe.remove();
       }
     }
 
-    //Wrap floor 
+    // Wrap floor 
     if (camera.x > floor.x + width / 2) {
       floor.x += width;
     }
   }
 
-  //The camera follows the player's x axis movement
-  camera.x = player.x + 150;
+  // The camera follows the player's x-axis movement
+  camera.x = player.x + width / 4; // Adjust camera follow
 
   camera.off();
   background(135, 206, 235);
   camera.on();
 
   if (!loss) {
-    camera.x = player.x + 150;
+    camera.x = player.x + width / 4; // Adjust camera follow
     world.step();
   }
 
-  allSprites.debug = kb.pressing('d');
+  allSprites.debug = keyIsDown(68); // Adjust debug key
 }
 
 /* FUNCTIONS */
