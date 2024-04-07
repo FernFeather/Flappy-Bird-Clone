@@ -8,7 +8,7 @@ function setup() {
   floor = new Sprite(width / 2, height - 20, width * 2, 40, "n"); // Adjust floor position and width
 
   // Create player object
-  player = new Sprite(width / 4, height / 2); // Adjust player initial position
+  player = new Sprite(width / 2, height / 2); // Adjust player initial position
 
   // Create game obstacles group
   obstacles = new Group();
@@ -102,7 +102,7 @@ function newGame() {
   obstacles.removeAll();
   loss = false;
   restartPossible = false;
-  player.x = width * 0.7;
+  player.x = width +.5;
   player.y = height / 2;
   player.vel.x = 4;
   player.vel.y = 0;
